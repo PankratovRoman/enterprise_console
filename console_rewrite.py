@@ -4,8 +4,9 @@ class Command:
         self.params = params
 
     def check_param(self, user_input):  # на входе у нас массив из [ключ(команда), все остальное(параметры и значения параметров)]
+        params = ', '.join(self.params)
         if (len(split_command)-1) < len(self.params):
-            print('Expected parameters: {}'.format(self.params))  # к тому же вот тут возвращается список, а пробежать по нему циклом корректно чет не получается
+            print('Expected parameters: {}'.format(params))  # к тому же вот тут возвращается список, а пробежать по нему циклом корректно чет не получается
         command_list_item = command_list[user_input]  # получаем экземпляр класса
         command_param = split_command[1:]  # присваиваем в command_param массив в котором все, что после ключа во введенном тексте
         split_param = (i.split(':') for i in command_param)  # получаем массив [параметр, значение]
