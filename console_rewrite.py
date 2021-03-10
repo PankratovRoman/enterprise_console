@@ -9,11 +9,10 @@ class Command:
             print('Expected parameters: {}'.format(params))  # к тому же вот тут возвращается список, а пробежать по нему циклом корректно чет не получается
         command_list_item = command_list[user_input]  # получаем экземпляр класса
         command_param = split_command[1:]  # присваиваем в command_param массив в котором все, что после ключа во введенном тексте
-        split_param = (i.split(':') for i in command_param)  # получаем массив [параметр, значение]
+        split_param = [i.split(':') for i in command_param]  # получаем массив [параметр, значение]
         for i in split_param:  # проверяем, есть ли параметр из массива splited_param в параметрах команды из справочника
             if i[0] not in command_list_item.params:
                 print('Parameter "{}" is not in parameter list. Type "help {}" for help.'.format(i[0], user_input_command))
-        return True
 
 
 class Units:
@@ -36,11 +35,16 @@ def help_command(input_command):
     '''Функция, которая выводит help к каждой из команд'''
     help_command = input_command.split(' ')
     help_unit = help_command[1]
-    list_to_str = ', '.join(command_list[help_unit].params)
-    if help_unit not in command_list:
+    if help_unit == 'help':
+        print('Help! I need somebody, help! Not just anybody, Help! You know I need someone, help!')
+        return True
+    elif help_unit not in command_list:
         print('Command "{}" is not in command list. Type "help" for help.'.format(help_unit))
-    elif help_unit == 'start':
-        print('"start" gives the command to start one of the modules. Expected parameters: {}'.format(list_to_str))
+        return True
+
+    list_to_str = ', '.join(command_list[help_unit].params)
+    if help_unit == 'start':
+        print('"start" gives the command to start one of the modules. Expected parameters: {}'.format(', '.join(command_list[help_unit].params)))
     elif help_unit == 'power':
         print('"power" gives the command to increase or decrease engine power. Expected parameters: {}'.format(list_to_str))
     elif help_unit == 'velocity':
