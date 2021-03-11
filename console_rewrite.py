@@ -11,15 +11,14 @@ class Command:
     def check_param(self, user_input):  # на входе массив из [ключ(команда), все остальное(параметры и знач параметров)]
         if (len(split_command)-1) < len(self.params):
             print('Expected parameters: {}'.format(', '.join(self.params)))
+            return False
         command_list_item = command_list[user_input]  # получаем экземпляр класса
         # command_param = split_command[1:]  # присваиваем массив в котором все, что после ключа во введенном тексте
         # split_param = [i.split(':') for i in command_param]  # получаем массив [параметр, значение]
         # две строки выше заменил на финкцию, т.к. использую этот способ в нескольких местах
         split_param = split_params(split_command)
         for i in split_param:  # проверяем, есть ли параметр из массива split_param в параметрах команды из справочника
-            if len(i[0]) == 0:  # это для команд без параметров, ебучий костыль
-                return True
-            elif i[0] not in command_list_item.params:
+            if i[0] not in command_list_item.params:
                 print('Parameter "{}" is not in parameter list. Type "help {}" for help.'
                       .format(i[0], user_input_command))
                 return False
