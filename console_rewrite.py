@@ -8,33 +8,20 @@ class Command:
             self.help_text = help_text
         self.execute_text = execute_text
 
-    def check_param(self, user_input):  # на входе массив из [ключ(команда), все остальное(параметры и знач параметров)]
-        if (len(split_command)-1) < len(self.params):
-            print('Expected parameters: {}'.format(', '.join(self.params)))
-            return False
-        command_list_item = command_list[user_input]  # получаем экземпляр класса
-        # command_param = split_command[1:]  # присваиваем массив в котором все, что после ключа во введенном тексте
-        # split_param = [i.split(':') for i in command_param]  # получаем массив [параметр, значение]
-        # две строки выше заменил на финкцию, т.к. использую этот способ в нескольких местах
-        split_param = split_params(split_command)
+    def execute(self, params):
+        if len(params) < len(self.params):
+            raise Exception('Expected parameters: {}'.format(', '.join(self.params)))
+        split_param = split_params(params)
         for i in split_param:  # проверяем, есть ли параметр из массива split_param в параметрах команды из справочника
-            if i[0] not in command_list_item.params:
-                print('Parameter "{}" is not in parameter list. Type "help {}" for help.'
-                      .format(i[0], user_input_command))
-                return False
+            if i[0] not in self.params:
+                raise Exception('Parameter "{}" is not in parameter list. Type "help {}" for help.'
+                      .format(i[0], self.name))
             elif len(i) < 2:
-                print('Enter parameter value for {}.'.format(i[0]))
-                return False
+                raise Exception('Enter parameter value for {}.'.format(i[0]))
             elif len(i[1]) == 0:
-                print('Expected parameter value for {}.'.format(i[0]))
-                return False
-        return True
-
-    def execute(self, user_input_command):
-        exec_list = split_params(split_command)
-        exec_text = [(i[0]+' with value '+i[1]) for i in exec_list]
-        if user_input_command == self.name:
-            print('Command: ' + user_input_command + '. ' + self.execute_text + ' ' + ', '.join(exec_text))
+                raise Exception('Expected parameter value for {}.'.format(i[0]))
+        exec_text = [(i[0]+' with value '+i[1]) for i in split_param]
+        print('Command: ' + self.name + '. ' + self.execute_text + ' ' + ', '.join(exec_text))
 
 
 class Units:
@@ -69,9 +56,8 @@ def help_command(input_command):
 
 
 def split_params(split_command):
-    split_command = split_command[1:]
-    split_param = [i.split(':') for i in split_command]
-    return split_param
+    return [i.split(':') for i in split_command]
+
 
 
 print('Welcome to Enterprise test console. Type "help" for help.')
@@ -86,16 +72,19 @@ while True:
         break
     elif user_input_command == 'debug' and (len(split_command) > 1):
         continue
-    elif user_input_command == 'help' and (len(split_command) > 1):
-        help_command(input_command)
-        continue
-    elif input_command == 'help':
-        com_to_str = ', '.join(command_list)
-        print('Expected commands: {}'.format(com_to_str))
+    elif user_input_command == 'help':
+        if len(split_command) > 1:
+            help_command(input_command)
+        elif input_command == 'help':
+            com_to_str = ', '.join(command_list)
+            print('Expected commands: {}'.format(com_to_str))
         continue
     elif user_input_command not in command_list:  # проверяем есть ли выбранный ранее ключ в словаре
         print('Command "{}" is not in command list. Type "help" for help.'.format(user_input_command))
         continue
 
-    if Command.check_param(command_list[user_input_command], user_input_command) is True:
-        Command.execute(command_list[user_input_command], user_input_command)
+    command = command_list[user_input_command]
+    try:
+        command.execute(split_command[1:])
+    except Exception as ex:
+        print(str(ex))
