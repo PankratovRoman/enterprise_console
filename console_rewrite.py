@@ -43,9 +43,9 @@ command_list = {'start': Command('start', [units['engine'].name, units['injector
                 }
 
 
-def help_command(input_command):
+def help_command(inp_for_help):
     ''' Функция, которая выводит help к каждой из команд '''
-    help_command = input_command.split(' ')
+    help_command = inp_for_help.split(' ')
     help_unit = help_command[1]
     if help_unit == 'help':
         print('Help! I need somebody, help! Not just anybody, Help! You know I need someone, help!')
@@ -55,9 +55,8 @@ def help_command(input_command):
         print(command_list[help_unit].help_text)
 
 
-def split_params(split_command):
-    return [i.split(':') for i in split_command]
-
+def split_params(command_for_split):
+    return [i.split(':') for i in command_for_split]
 
 
 print('Welcome to Enterprise test console. Type "help" for help.')
