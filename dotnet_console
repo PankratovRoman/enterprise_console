@@ -1,5 +1,6 @@
 using System;
-
+using System.Collections;
+using System.Collections.Generic;
 
 namespace EnterpriseConsole
 {
@@ -22,7 +23,7 @@ namespace EnterpriseConsole
         }
     }
 
-    class Program
+    class Program 
     {
         static void Main(string[] args)
         {
@@ -31,11 +32,12 @@ namespace EnterpriseConsole
             string[] split_command = command_input.Split(' '); // бьем команду на массив строк
 
             
-            string[] get_param_from_input = new string[split_command.Length]; // отделяем команду и получаем массив из параметров
-            for (int j = 1; j < get_param_from_input.Length; j++)
+            List<string> get_param_from_input = new List<string>(); // отделяем команду и получаем массив из параметров
+            for (int j = 1; j < split_command.Length; j++)
             {
-                get_param_from_input[j] = split_command[j];
+                get_param_from_input.Add(split_command[j].ToString());
             }
+
             foreach (string el in get_param_from_input) 
             { 
                 Console.Write(el + " ");
